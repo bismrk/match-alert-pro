@@ -1,48 +1,82 @@
 /**
- * Mocked API client.
- *
- * Every function here maps 1:1 to an endpoint in openapi.yaml. Swap the bodies
- * for real `fetch` calls once the FastAPI backend is running — signatures stay.
+ * Real API client connected to the FastAPI backend.
  */
-import { matches, subscription, teams } from "./mockDb";
 import type { Match, Subscription, SubscriptionPayload, Team } from "./types";
 
-const latency = (ms = 220) => new Promise((r) => setTimeout(r, ms));
+const API_BASE = "http://127.0.0.1:8000/api";
+let cachedToken: string | null = null;
+
+async function getToken(): Promise<string> {
+  if (cachedToken) return cachedToken;
+  
+  const res = await fetch(`${API_BASE}/auth/token`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: new URLSearchParams({
+      username: "testuser",
+      password: "password",
+    }),
+  });
+  
+  if (!res.ok) {
+    throw new Error("Failed to authenticate with backend");
+  }
+  
+  const data = await res.json();
+  cachedToken = data.access_token;
+  return cachedToken;
+}
+
+async function fetchWithAuth(endpoint: string, options: RequestInit = {}) {
+  const token = await getToken();
+  
+  const headers = new Headers(options.headers);
+  headers.set("Authorization", `Bearer ${token}`);
+  if (!headers.has("Content-Type") && options.method !== "GET" && options.method !== "DELETE") {
+    headers.set("Content-Type", "application/json");
+  }
+  
+  const res = await fetch(`${API_BASE}${endpoint}`, {
+    ...options,
+    headers,
+  });
+  
+  if (!res.ok) {
+    throw new Error(`API request failed: ${res.statusText}`);
+  }
+  
+  return res.json();
+}
 
 /** GET /api/teams */
 export async function getTeams(): Promise<Team[]> {
-  await latency();
-  return structuredClone(teams);
+  // Can be accessed without auth, but we'll use our wrapper for simplicity
+  return fetchWithAuth("/teams");
 }
 
 /** GET /api/matches/urgency */
 export async function getMatchesByUrgency(): Promise<Match[]> {
-  await latency();
-  return structuredClone(matches).sort(
-    (a, b) => new Date(a.kickoffAt).getTime() - new Date(b.kickoffAt).getTime(),
-  );
+  return fetchWithAuth("/matches/urgency");
 }
 
 /** POST /api/subscriptions */
 export async function saveSubscription(payload: SubscriptionPayload): Promise<Subscription> {
-  await latency(300);
-  subscription.teamIds = payload.teamIds;
-  subscription.reminderIntervals = payload.reminderIntervals;
-  subscription.updatedAt = new Date().toISOString();
-  return structuredClone(subscription);
+  return fetchWithAuth("/subscriptions", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
 }
 
 /** GET /api/subscriptions */
 export async function getSubscription(): Promise<Subscription> {
-  await latency();
-  return structuredClone(subscription);
+  return fetchWithAuth("/subscriptions");
 }
 
 /** POST /api/matches/{id}/bet-placed */
 export async function markBetPlaced(id: string): Promise<Match> {
-  await latency(200);
-  const match = matches.find((m) => m.id === id);
-  if (!match) throw new Error(`Match ${id} not found`);
-  match.betPlaced = !match.betPlaced;
-  return structuredClone(match);
+  return fetchWithAuth(`/matches/${id}/bet-placed`, {
+    method: "POST",
+  });
 }
