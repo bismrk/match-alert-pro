@@ -49,3 +49,19 @@ npm install
 npm run dev
 ```
 The frontend will be available at `http://localhost:5173` (or port 8080 depending on configuration).
+
+### Запуск через Docker
+
+У проекті налаштовано `Dockerfile`, який об'єднує Python-бекенд та Node.js-фронтенд в одному контейнері.
+
+1. **Зберіть Docker-образ:**
+   ```bash
+   docker build -t match-tracker-pro .
+   ```
+2. **Запустіть контейнер:**
+   ```bash
+   docker run -p 8000:8000 -p 3000:3000 match-tracker-pro
+   ```
+Після запуску:
+- Фронтенд (UI) буде доступний за адресою: `http://localhost:3000`
+- API бекенду: `http://localhost:8000/api/...`
