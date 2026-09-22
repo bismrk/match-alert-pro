@@ -35,7 +35,7 @@ COPY --from=frontend-builder /app/frontend/.output /app/frontend/.output
 # Create a startup script to run both servers
 RUN echo '#!/bin/bash\n\
 # Start FastAPI backend in the background on port 8000\n\
-uv run uvicorn backend.main:app --host 0.0.0.0 --port 8000 &\n\
+uv run uvicorn backend.src.main:app --host 0.0.0.0 --port 8000 &\n\
 \n\
 # Start Nitro frontend server in the foreground on port 3000\n\
 PORT=3000 node /app/frontend/.output/server/index.mjs\n\

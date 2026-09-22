@@ -15,35 +15,35 @@ def seed_db(db: Session):
         return
 
     teams = [
-        db_models.DBTeam(id="rma", name="Real Madrid", league="La Liga", crestUrl="/src/assets/crest-navy.png"),
-        db_models.DBTeam(id="bar", name="Barcelona", league="La Liga", crestUrl="/src/assets/crest-green.png"),
-        db_models.DBTeam(id="ars", name="Arsenal", league="Premier League", crestUrl="/src/assets/crest-red.png"),
-        db_models.DBTeam(id="liv", name="Liverpool", league="Premier League", crestUrl="/src/assets/crest-red.png"),
-        db_models.DBTeam(id="int", name="Inter", league="Serie A", crestUrl="/src/assets/crest-green.png"),
-        db_models.DBTeam(id="juv", name="Juventus", league="Serie A", crestUrl="/src/assets/crest-black.png"),
-        db_models.DBTeam(id="mil", name="AC Milan", league="Serie A", crestUrl="/src/assets/crest-red.png"),
-        db_models.DBTeam(id="bay", name="Bayern", league="Bundesliga", crestUrl="/src/assets/crest-navy.png"),
-        db_models.DBTeam(id="bvb", name="Dortmund", league="Bundesliga", crestUrl="/src/assets/crest-black.png"),
-        db_models.DBTeam(id="psg", name="PSG", league="Ligue 1", crestUrl="/src/assets/crest-navy.png"),
+        db_models.DBTeam(id="rma", name="Real Madrid", league="La Liga", crestUrl="/crest-navy.png"),
+        db_models.DBTeam(id="bar", name="Barcelona", league="La Liga", crestUrl="/crest-green.png"),
+        db_models.DBTeam(id="ars", name="Arsenal", league="Premier League", crestUrl="/crest-red.png"),
+        db_models.DBTeam(id="liv", name="Liverpool", league="Premier League", crestUrl="/crest-red.png"),
+        db_models.DBTeam(id="int", name="Inter", league="Serie A", crestUrl="/crest-green.png"),
+        db_models.DBTeam(id="juv", name="Juventus", league="Serie A", crestUrl="/crest-black.png"),
+        db_models.DBTeam(id="mil", name="AC Milan", league="Serie A", crestUrl="/crest-red.png"),
+        db_models.DBTeam(id="bay", name="Bayern", league="Bundesliga", crestUrl="/crest-navy.png"),
+        db_models.DBTeam(id="bvb", name="Dortmund", league="Bundesliga", crestUrl="/crest-black.png"),
+        db_models.DBTeam(id="psg", name="PSG", league="Ligue 1", crestUrl="/crest-navy.png"),
     ]
     db.add_all(teams)
 
     matches = [
         db_models.DBMatch(
             id="m1", homeTeam="Real Madrid", awayTeam="Barcelona", competition="La Liga",
-            venue="Estadio Bernabéu", kickoffAt=hours_from_now(1.4), crestUrl="/src/assets/crest-navy.png", urgency="critical"
+            venue="Estadio Bernabéu", kickoffAt=hours_from_now(1.4), crestUrl="/crest-navy.png", urgency="critical"
         ),
         db_models.DBMatch(
             id="m2", homeTeam="Arsenal", awayTeam="Liverpool", competition="Premier League",
-            venue="Emirates", kickoffAt=hours_from_now(18), crestUrl="/src/assets/crest-red.png", urgency="soon"
+            venue="Emirates", kickoffAt=hours_from_now(18), crestUrl="/crest-red.png", urgency="soon"
         ),
         db_models.DBMatch(
             id="m3", homeTeam="Inter", awayTeam="Juventus", competition="Serie A",
-            venue="San Siro", kickoffAt=hours_from_now(30.4), crestUrl="/src/assets/crest-green.png", urgency="soon"
+            venue="San Siro", kickoffAt=hours_from_now(30.4), crestUrl="/crest-green.png", urgency="soon"
         ),
         db_models.DBMatch(
             id="m4", homeTeam="Bayern", awayTeam="Dortmund", competition="Bundesliga",
-            venue="Allianz", kickoffAt=hours_from_now(60.2), crestUrl="/src/assets/crest-black.png", urgency="later"
+            venue="Allianz", kickoffAt=hours_from_now(60.2), crestUrl="/crest-black.png", urgency="later"
         ),
     ]
     db.add_all(matches)
